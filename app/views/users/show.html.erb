@@ -1,0 +1,60 @@
+<% provide(:title, "My Page") %>
+
+<div class="center">
+  <h2>
+    <%= @user.name %>
+  </h2>
+</div>
+
+<div class="row">
+  <div class="form-group col-md-4 col-md-offset-4">
+    <%= form_with(model: @task, local: true) do |f| %>
+      <%= render 'shared/error_messages', object: f.object %>
+      <div class="field">
+        <%= hidden_field_tag :user_id, @user.id %>
+        <%= f.hidden_field   :state,   value: "todo" %>
+        
+        <%= f.text_field   :title,       class: "form-control", placeholder: "タイトル" %>
+        <%= f.text_area    :description, class: "form-control", placeholder: "詳細（100字以内）" %>
+        <%= f.date_field   :due_date,    class: "form-control" %>
+
+        <%= f.submit "タスク作成", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card col-md-8 col-md-offset-2">
+    <ul class="list-group list-group-flush">
+      <% @tasks.each do |task| %>
+        <li class="list-group-item" style="<%= "background: Bisque;" if task.state == "done" %>">
+          <h4 style="<%= "text-decoration: line-through;" if task.state == "done" %>">
+            <%= task.title %>
+          </h4>
+          <p style="<%= "text-decoration: line-through;" if task.state == "done" %>">
+            <%= task.description %>
+          </p>
+          <div class="row">
+            <div class="col-sm-3">state : <%= task.state %></div>
+            <div class="col-sm-5">limit : <%= task.due_date %></div>
+            <div class="col-sm-2">
+              <% if task.state == "todo" %>
+                <%= link_to "完了！",   tasks_path(user_id: @user.id, task_id: task.id), method: :put,
+                                        class: "taskops" %>
+              <% else %>
+                <%= link_to "元に戻す", tasks_path(user_id: @user.id, task_id: task.id), method: :put,
+                                        class: "taskops" %>
+              <% end %>
+            </div>
+            <div class="col-sm-2">
+              <%= link_to "削除", tasks_path(user_id: @user.id, task_id: task.id), method: :delete,
+                                  class: "taskops",
+                                  data: { confirm: "タスクを削除しますか？" } %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

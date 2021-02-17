@@ -1,0 +1,10 @@
+<div class="center jumbotron">
+  <h1 id="top-logo">ToDoLIST</h1>
+  <p>ようこそ！ <%= current_user.name + "さん" if current_user %></p>
+  <br>
+  <% if current_user %>
+    <p><%= link_to 'マイページ', current_user %></p>
+  <% else %>
+    <p><%= link_to 'ユーザー登録', signup_path %>  または  <%= link_to 'ログイン', login_path %></p>
+  <% end %>
+</div>
